@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Header from './components/layouts/Header';
-import Grilla from './components/views/Grilla';
+import Hoy from './components/views/Hoy';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
     <Header />
-    <Grilla />
+    <Hoy />
   </React.StrictMode>,
   document.getElementById('root')
 );
