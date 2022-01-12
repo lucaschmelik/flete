@@ -13,19 +13,15 @@ export default function Agendar() {
         setDate(date);
     }
 
-    const [controlHorario, setControlHorario] = useState({ visible: "" })
+    const [isVisibleControlHorario, setIsVisibleControlHorario] = useState(true)
 
-    const [controlHorarioEspecial, setcontrolHorarioEspecial] = useState({ visible: "none" })
+    const [isVisiblecontrolHorarioEspecial, setIsVisibleControlHorarioEspecial] = useState(false)
 
     const MostrarOcultarRangoEspecial = (check) => {
         const checked = check.target.checked
 
-        setControlHorario({
-            visible: checked ? "none" : ""
-        })
-        setcontrolHorarioEspecial({
-            visible: checked ? "" : "none"
-        })
+        setIsVisibleControlHorario(!isVisibleControlHorario)
+        setIsVisibleControlHorarioEspecial(!isVisiblecontrolHorarioEspecial)
     }
 
     return (
@@ -81,13 +77,15 @@ export default function Agendar() {
                     <Col>
                         <Form.Group controlId="formGridHorario">
                             <Form.Label>Rango horario</Form.Label>
-                            <Form.Select controlId="formGridHorario" style={{ display: controlHorario.visible }}>
+                            {isVisibleControlHorario && 
+                            <Form.Select  controlId="formGridHorario">
                                 <option>7 a 10hs</option>
                                 <option>8 a 11hs</option>
                                 <option>11 a 14hs</option>
                                 <option>14 a 17hs</option>
-                            </Form.Select>
-                            <Form.Control placeholder="Ingrese el rango horario especial" style={{ display: controlHorarioEspecial.visible }} />
+                            </Form.Select>}
+                            {isVisiblecontrolHorarioEspecial && 
+                            <Form.Control placeholder="Ingrese el rango horario especial" />}                            
                             <Form.Check type="checkbox" label="Rango especial" onClick={e => MostrarOcultarRangoEspecial(e)} />
                         </Form.Group>
                     </Col>
