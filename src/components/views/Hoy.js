@@ -1,24 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Button, Accordion } from 'react-bootstrap'
 import { ArrowDown, ArrowReturnLeft, ArrowUp, Check } from "react-bootstrap-icons";
 import moment from 'moment'
+import Global from '../utils/global';
+import Axios from 'axios';
 
 export default function Hoy() {
-
-    const datos = [
-        {
-            orden: 1, horario: "9 a 12hs", barrio: "Santos Lugares", dirección: "Av La Plata 190", recibe: "Juana", envia: "Luis", telefono: 1130647755
-        },
-        {
-            orden: 2, horario: "12 a 15hs", barrio: "Devoto", dirección: "Carbone 1676", recibe: "Pedro", envia: "Marta", telefono: 1130647755
-        },
-        {
-            orden: 3, horario: "7 a 11hs", barrio: "La Plata", dirección: "	Siempre Vida 1112", recibe: "Felipe", envia: "Lucas", telefono: 1130647755
-        }
-    ];
+    
+    useEffect (() => {
+        Axios.get(Global.urlViajes)
+        .then(res => {
+            listarOrden(res.data)
+            setViajes({
+                datos: res.data,
+                status: true
+            })
+        })         
+    }, [])
 
     const [viajes, setViajes] = useState({
-        datos: datos,
+        datos: [],
         orden: '',
         horario: '',
         barrio: '',
@@ -26,7 +27,8 @@ export default function Hoy() {
         recibe: '',
         envia: '',
         telefono: 0,
-        completado: ''
+        completado: '',
+        status: false
     })
 
     const [viajesCompletados, setViajesCompletados] = useState({
@@ -88,7 +90,7 @@ export default function Hoy() {
         viajesCompletados.datos.push(viaje)
         listaViajes.splice(index, 1)
 
-        listarOrden()
+        listarOrden(viajes.datos)
 
         setViajes({
             ...viajes,
@@ -106,7 +108,7 @@ export default function Hoy() {
         viajes.datos.push(viaje)
         listaViajesCompletados.splice(index, 1)
 
-        listarOrden()
+        listarOrden(viajes.datos)
 
         setViajesCompletados({
             ...viajesCompletados,
@@ -118,9 +120,9 @@ export default function Hoy() {
         })
     }
 
-    const listarOrden = () => {
+    const listarOrden = (lista) => {
         var contador = 1
-        viajes.datos.forEach((viaje) => {
+        lista.forEach((viaje) => {
             viaje.orden = contador++
         })
     }
@@ -147,7 +149,7 @@ export default function Hoy() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+                                { viajes.status &&
                                     viajes.datos.map((viaje, index) => (
                                         <tr >
                                             <td>{viaje.orden}</td>
