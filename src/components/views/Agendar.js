@@ -17,9 +17,7 @@ export default function Agendar() {
 
     const [isVisiblecontrolHorarioEspecial, setIsVisibleControlHorarioEspecial] = useState(false)
 
-    const MostrarOcultarRangoEspecial = (check) => {
-        const checked = check.target.checked
-
+    const MostrarOcultarRangoEspecial = () => {
         setIsVisibleControlHorario(!isVisibleControlHorario)
         setIsVisibleControlHorarioEspecial(!isVisiblecontrolHorarioEspecial)
     }
@@ -86,12 +84,11 @@ export default function Agendar() {
                             </Form.Select>}
                             {isVisiblecontrolHorarioEspecial && 
                             <Form.Control placeholder="Ingrese el rango horario especial" />}                            
-                            <Form.Check type="checkbox" label="Rango especial" onClick={e => MostrarOcultarRangoEspecial(e)} />
+                            <Form.Check type="checkbox" label="Rango especial" onClick={ () => MostrarOcultarRangoEspecial()} />
                         </Form.Group>
                     </Col>
                 </Row>
                 <Row>
-
                 </Row>
                 <br></br>
                 <Button variant="primary" type="submit">Guardar</Button>

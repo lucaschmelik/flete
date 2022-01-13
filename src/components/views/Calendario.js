@@ -4,10 +4,10 @@ import '../css/index.css';
 import { Calendar, Badge } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Container, Button, Table } from 'react-bootstrap'
+import { Trash } from "react-bootstrap-icons";
 
 export default function Calendario() {
 
-    
     const datosTruchos = [
         {
             horario: "9 a 12hs", barrio: "Santos Lugares", dirección: "Av La Plata 190", recibe: "Juana", envia: "Luis", telefono: 1130647755, estado: "Entregado"
@@ -16,7 +16,6 @@ export default function Calendario() {
             horario: "12 a 15hs", barrio: "Devoto", dirección: "Carbone 1676", recibe: "Pedro", envia: "Marta", telefono: 1130647755, estado: "Entregado"
         }
     ];
-
 
     const [isVisibleCalendario, setIsVisibleCalendario] = useState(true)
 
@@ -109,9 +108,19 @@ export default function Calendario() {
         console.log(date.format('YYYY-MM-DD'));
     }
 
+    function EliminarViaje(index) {
+        var listaViajes = viajes.datos
+        listaViajes.splice(index, 1)
+
+        setViajes({
+            ...viajes,
+            datos: listaViajes
+        })
+    }
+
     return (
         <Container>
-            {isVisibleCalendario && <Calendar onPanelChange={onPanelChange} dateCellRender={dateCellRender} locale={locale} onSelect={onSelect}/>}
+            {isVisibleCalendario && <Calendar onPanelChange={onPanelChange} dateCellRender={dateCellRender} locale={locale} onSelect={onSelect} />}
             {viajes.visible &&
                 <Table >
                     <thead>
@@ -123,6 +132,7 @@ export default function Calendario() {
                             <th>Envía</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,6 +146,11 @@ export default function Calendario() {
                                     <td>{viaje.envia}</td>
                                     <td>{viaje.telefono}</td>
                                     <td>{viaje.estado}</td>
+                                    <td>
+                                        <Button size="md" onClick={ () => EliminarViaje(index)} >
+                                            <Trash />
+                                        </Button>
+                                    </td>
                                 </tr>
                             ))
                         }
