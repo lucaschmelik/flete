@@ -40,50 +40,52 @@ export default function Hoy() {
         completado: ''
     })
 
-    const bajarViaje = (ordenViaje) => {
+    const bajarViaje = async (ordenViaje) => {
         var listaViajes = viajes.datos
-        listaViajes.forEach((viaje, index) => {
+        var contador = 0
+        for (const viaje of listaViajes) {
             if (viaje.orden === ordenViaje + 1) {
-                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index].id}&ordenNuevo=${ordenViaje}`)
+                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje}`)
                     .catch(error => {
                         alert(error.response.data);
                     });
 
-                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index - 1].id}&ordenNuevo=${ordenViaje + 1}`)
+                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje + 1}`)
                     .catch(error => {
                         alert(error.response.data);
                     })
             }
-            actualizarViajesPendientes()
+            contador = contador + 1
         }
-        )        
+        actualizarViajesPendientes()
     }
 
-    const subirViaje = (ordenViaje) => {
+    const subirViaje = async (ordenViaje) => {
         if (ordenViaje === 1) return
         var listaViajes = viajes.datos
-        listaViajes.forEach((viaje, index) => {
+        var contador = 0
+        for (const viaje of listaViajes) {
             if (viaje.orden === ordenViaje) {
-                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index].id}&ordenNuevo=${ordenViaje - 1}`)
+                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje - 1}`)
                     .catch(error => {
                         alert(error.response.data);
                     });
 
-                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index - 1].id}&ordenNuevo=${ordenViaje}`)
+                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje}`)
                     .catch(error => {
                         alert(error.response.data);
                     })
             }
-            actualizarViajesPendientes()
+            contador = contador + 1
         }
-        )
+        actualizarViajesPendientes()
     }
 
-    const completarViaje = (index) => {
+    const completarViaje = async (index) => {
         var viaje = viajes.datos[index]
         viaje.completado = new Date()
 
-        Axios.put(Global.urlViajeCompletado, `id=${viaje.id}&completado=${viaje.completado.toJSON()}`)
+        await Axios.put(Global.urlViajeCompletado, `id=${viaje.id}&completado=${viaje.completado.toJSON()}`)
             .catch(error => {
                 alert(error.response.data)
             })
@@ -92,10 +94,10 @@ export default function Hoy() {
         actualizarViajesCompletados()
     }
 
-    const deshacerViaje = (index) => {
+    const deshacerViaje = async (index) => {
         var viaje = viajesCompletados.datos[index]
 
-        Axios.put(Global.urlViajeDeshacer, `id=${viaje.id}`)
+        await Axios.put(Global.urlViajeDeshacer, `id=${viaje.id}`)
             .catch(error => {
                 alert(error.response.data)
             })
@@ -152,28 +154,28 @@ export default function Hoy() {
                                 </tr>
                             </thead>
                             <tbody>
-                                { viajes.datos.map((viaje, index) => (
-                                        <tr >
-                                            <td>{viaje.orden}</td>
-                                            <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
-                                            <td>{viaje.barrio}</td>
-                                            <td>{viaje.direccion}</td>
-                                            <td>{viaje.recibe}</td>
-                                            <td>{viaje.envia}</td>
-                                            <td>{viaje.telefono}</td>
-                                            <td><Button>
-                                                <Check variant="flat" onClick={() => completarViaje(index)} />
-                                            </Button></td>
-                                            <td>
-                                                <Button size="lg" variant="flat" onClick={() => bajarViaje(viaje.orden)}>
-                                                    <ArrowDown />
-                                                </Button>
-                                                <Button size="lg" variant="flat" onClick={() => subirViaje(viaje.orden)}>
-                                                    <ArrowUp />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
+                                {viajes.datos.map((viaje, index) => (
+                                    <tr >
+                                        <td>{viaje.orden}</td>
+                                        <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
+                                        <td>{viaje.barrio}</td>
+                                        <td>{viaje.direccion}</td>
+                                        <td>{viaje.recibe}</td>
+                                        <td>{viaje.envia}</td>
+                                        <td>{viaje.telefono}</td>
+                                        <td><Button>
+                                            <Check variant="flat" onClick={() => completarViaje(index)} />
+                                        </Button></td>
+                                        <td>
+                                            <Button size="lg" variant="flat" onClick={() => bajarViaje(viaje.orden)}>
+                                                <ArrowDown />
+                                            </Button>
+                                            <Button size="lg" variant="flat" onClick={() => subirViaje(viaje.orden)}>
+                                                <ArrowUp />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
                                 }
                             </tbody>
                         </Table>
@@ -196,20 +198,20 @@ export default function Hoy() {
                                 </tr>
                             </thead>
                             <tbody>
-                                { viajesCompletados.datos.map((viaje, index) => (
-                                        <tr >
-                                            <td>{moment(viaje.completado).format('DD/MM HH:mm')}</td>
-                                            <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
-                                            <td>{viaje.barrio}</td>
-                                            <td>{viaje.direccion}</td>
-                                            <td>{viaje.recibe}</td>
-                                            <td>{viaje.envia}</td>
-                                            <td>{viaje.telefono}</td>
-                                            <td><Button>
-                                                <ArrowReturnLeft variant="flat" onClick={() => deshacerViaje(index)} />
-                                            </Button></td>
-                                        </tr>
-                                    ))
+                                {viajesCompletados.datos.map((viaje, index) => (
+                                    <tr >
+                                        <td>{moment(viaje.completado).format('DD/MM HH:mm')}</td>
+                                        <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
+                                        <td>{viaje.barrio}</td>
+                                        <td>{viaje.direccion}</td>
+                                        <td>{viaje.recibe}</td>
+                                        <td>{viaje.envia}</td>
+                                        <td>{viaje.telefono}</td>
+                                        <td><Button>
+                                            <ArrowReturnLeft variant="flat" onClick={() => deshacerViaje(index)} />
+                                        </Button></td>
+                                    </tr>
+                                ))
                                 }
                             </tbody>
                         </Table>
