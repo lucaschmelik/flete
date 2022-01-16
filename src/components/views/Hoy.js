@@ -6,37 +6,34 @@ import Global from '../utils/global';
 import Axios from 'axios';
 
 export default function Hoy() {
-    
-    useEffect (() => {
-        Axios.get(Global.urlViajes)
-        .then(res => {
-            listarOrden(res.data)
-            setViajes({
-                datos: res.data,
-                status: true
-            })
-        })         
+
+    useEffect(() => {
+        actualizarViajesPendientes()
+        actualizarViajesCompletados()
     }, [])
 
     const [viajes, setViajes] = useState({
         datos: [],
+        id: 0,
         orden: '',
-        horario: '',
+        horarioDesde: '',
+        horarioHasta: '',
         barrio: '',
-        dirección: '',
+        direccion: '',
         recibe: '',
         envia: '',
         telefono: 0,
         completado: '',
-        status: false
     })
 
     const [viajesCompletados, setViajesCompletados] = useState({
         datos: [],
+        id: 0,
         orden: '',
-        horario: '',
+        horarioDesde: '',
+        horarioHasta: '',
         barrio: '',
-        dirección: '',
+        direccion: '',
         recibe: '',
         envia: '',
         telefono: 0,
@@ -44,87 +41,93 @@ export default function Hoy() {
     })
 
     const bajarViaje = (ordenViaje) => {
-        const orden = ordenViaje
         var listaViajes = viajes.datos
         listaViajes.forEach((viaje, index) => {
-            if (viaje.orden === orden + 1) {
-                listaViajes[index].orden = orden
-                listaViajes[index - 1].orden = viaje.orden + 1
+            if (viaje.orden === ordenViaje + 1) {
+                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index].id}&ordenNuevo=${ordenViaje}`)
+                    .catch(error => {
+                        alert(error.response.data);
+                    });
+
+                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index - 1].id}&ordenNuevo=${ordenViaje + 1}`)
+                    .catch(error => {
+                        alert(error.response.data);
+                    })
             }
+            actualizarViajesPendientes()
         }
-        )
-
-        listaViajes.sort((x, y) => x.orden - y.orden)
-
-        setViajes({
-            ...viajes,
-            datos: listaViajes
-        })
+        )        
     }
 
     const subirViaje = (ordenViaje) => {
-        debugger
-        if(ordenViaje === 1) return
-        const orden = ordenViaje
+        if (ordenViaje === 1) return
         var listaViajes = viajes.datos
         listaViajes.forEach((viaje, index) => {
-            if (viaje.orden === orden) {
-                listaViajes[index].orden = viaje.orden - 1
-                listaViajes[index - 1].orden = orden
+            if (viaje.orden === ordenViaje) {
+                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index].id}&ordenNuevo=${ordenViaje - 1}`)
+                    .catch(error => {
+                        alert(error.response.data);
+                    });
+
+                Axios.put(Global.urlViajeOrden, `id=${listaViajes[index - 1].id}&ordenNuevo=${ordenViaje}`)
+                    .catch(error => {
+                        alert(error.response.data);
+                    })
             }
+            actualizarViajesPendientes()
         }
         )
-
-        listaViajes.sort((x, y) => x.orden - y.orden)
-
-        setViajes({
-            ...viajes,
-            datos: listaViajes
-        })
     }
 
     const completarViaje = (index) => {
-        var listaViajes = viajes.datos
-        var viaje = listaViajes[index]
+        var viaje = viajes.datos[index]
         viaje.completado = new Date()
-        viajesCompletados.datos.push(viaje)
-        listaViajes.splice(index, 1)
 
-        listarOrden(viajes.datos)
+        Axios.put(Global.urlViajeCompletado, `id=${viaje.id}&completado=${viaje.completado.toJSON()}`)
+            .catch(error => {
+                alert(error.response.data)
+            })
 
-        setViajes({
-            ...viajes,
-            datos: listaViajes
-        })
-
-        setViajesCompletados({
-            ...viajesCompletados,
-        })
+        actualizarViajesPendientes()
+        actualizarViajesCompletados()
     }
 
     const deshacerViaje = (index) => {
-        var listaViajesCompletados = viajesCompletados.datos
-        var viaje = listaViajesCompletados[index]
-        viajes.datos.push(viaje)
-        listaViajesCompletados.splice(index, 1)
+        var viaje = viajesCompletados.datos[index]
 
-        listarOrden(viajes.datos)
+        Axios.put(Global.urlViajeDeshacer, `id=${viaje.id}`)
+            .catch(error => {
+                alert(error.response.data)
+            })
 
-        setViajesCompletados({
-            ...viajesCompletados,
-            datos: listaViajesCompletados
-        })
-
-        setViajes({
-            ...viajes,
-        })
+        actualizarViajesPendientes()
+        actualizarViajesCompletados()
     }
 
     const listarOrden = (lista) => {
         var contador = 1
-        lista.forEach((viaje) => {
+        lista.forEach(viaje => {
             viaje.orden = contador++
         })
+    }
+
+    const actualizarViajesPendientes = () => {
+        Axios.get(Global.urlViajesPendientesPorFecha, { params: { fecha: new Date() } })
+            .then(res => {
+                listarOrden(res.data)
+                setViajes({
+                    datos: res.data
+                })
+            })
+    }
+
+    const actualizarViajesCompletados = () => {
+        Axios.get(Global.urlViajesCompletadosPorFecha, { params: { fecha: new Date() } })
+            .then(res => {
+                setViajesCompletados({
+                    datos: res.data
+                })
+            })
     }
 
     return (
@@ -149,13 +152,12 @@ export default function Hoy() {
                                 </tr>
                             </thead>
                             <tbody>
-                                { viajes.status &&
-                                    viajes.datos.map((viaje, index) => (
+                                { viajes.datos.map((viaje, index) => (
                                         <tr >
                                             <td>{viaje.orden}</td>
-                                            <td>{viaje.horario}</td>
+                                            <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
                                             <td>{viaje.barrio}</td>
-                                            <td>{viaje.dirección}</td>
+                                            <td>{viaje.direccion}</td>
                                             <td>{viaje.recibe}</td>
                                             <td>{viaje.envia}</td>
                                             <td>{viaje.telefono}</td>
@@ -194,13 +196,12 @@ export default function Hoy() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    viajesCompletados.datos.map((viaje, index) => (
+                                { viajesCompletados.datos.map((viaje, index) => (
                                         <tr >
-                                            <td>{moment(viaje.completado).format('DD/MM HH:mm') }</td>
-                                            <td>{viaje.horario}</td>
+                                            <td>{moment(viaje.completado).format('DD/MM HH:mm')}</td>
+                                            <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
                                             <td>{viaje.barrio}</td>
-                                            <td>{viaje.dirección}</td>
+                                            <td>{viaje.direccion}</td>
                                             <td>{viaje.recibe}</td>
                                             <td>{viaje.envia}</td>
                                             <td>{viaje.telefono}</td>
