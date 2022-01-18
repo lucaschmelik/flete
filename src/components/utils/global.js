@@ -5,7 +5,9 @@ const ApiViajes = {
     urlViajesCompletadosPorFecha: "https://localhost:44385/api/viajes/completados",
     urlViajeCompletado: "https://localhost:44385/api/viajes/entregado",
     urlViajeDeshacer: "https://localhost:44385/api/viajes/deshacer",
-    urlViajeOrden: "https://localhost:44385/api/viajes/orden"
+    urlViajeOrden: "https://localhost:44385/api/viajes/orden",
+    urlViajeEliminar: "https://localhost:44385/api/viajes/",
+    urlViajeCalendario: "https://localhost:44385/api/viajes/Calendario"
 }
 
 export default ApiViajes

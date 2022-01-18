@@ -4,8 +4,11 @@ import { DatePicker } from "antd";
 import "antd/dist/antd.css";
 import 'moment/locale/es-mx';
 import locale from 'antd/es/date-picker/locale/es_ES';
+import { useForm } from "react-hook-form";
 
 export default function Agendar() {
+
+    const {register} = useForm();
 
     const [date, setDate] = useState(new Date());
 
@@ -27,21 +30,21 @@ export default function Agendar() {
             <Form>
                 <Row className="mb-3">
                     <Col>
-                        <Form.Group controlId="formGridNombreRecibe">
+                        <Form.Group >
                             <Form.Label>Nombre recibe</Form.Label>
-                            <Form.Control placeholder="Ingrese el nombre de la persona que recibe" />
+                            <Form.Control {...register("lblNombreRecibe")} placeholder="Ingrese el nombre de la persona que recibe" />
                         </Form.Group>
                     </Col>
                     <Col>
-                        <Form.Group controlId="formGridNombreEnvia">
+                        <Form.Group >
                             <Form.Label>Nombre envía</Form.Label>
-                            <Form.Control placeholder="Ingrese el nombre de la persona que envía" />
+                            <Form.Control {...register("lblNombreEnvia")} placeholder="Ingrese el nombre de la persona que envía" />
                         </Form.Group>
                     </Col>
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <Form.Group controlId="formGridBarrio">
+                        <Form.Group >
                             <Form.Label>Barrio</Form.Label>
                             <Form.Select defaultValue="Elegir barrio...">
                                 <option>Elegir barrio...</option>
@@ -53,13 +56,13 @@ export default function Agendar() {
                         </Form.Group>
                     </Col>
                     <Col>
-                        <Form.Group controlId="formGridDireccion">
+                        <Form.Group >
                             <Form.Label >Dirección</Form.Label>
                             <Form.Control placeholder="Ingrese la dirección con altura y departamento" />
                         </Form.Group>
                     </Col>
                     <Col>
-                        <Form.Group controlId="formGridFecha">
+                        <Form.Group >
                             <Form.Label >Fecha</Form.Label><br></br>
                                 <DatePicker locale={locale} format="DD-MM-YYYY" size="large" style={ {width:200}} />
                         </Form.Group>
@@ -67,16 +70,16 @@ export default function Agendar() {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <Form.Group controlId="formGridtelefono">
+                        <Form.Group >
                             <Form.Label>Teléfono</Form.Label>
                             <Form.Control type='number' placeholder="Ingrese el teléfono de quien recibe" />
                         </Form.Group>
                     </Col>
                     <Col>
-                        <Form.Group controlId="formGridHorario">
+                        <Form.Group >
                             <Form.Label>Rango horario</Form.Label>
                             {isVisibleControlHorario && 
-                            <Form.Select  controlId="formGridHorario">
+                            <Form.Select >
                                 <option>7 a 10hs</option>
                                 <option>8 a 11hs</option>
                                 <option>11 a 14hs</option>

@@ -1,21 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import 'antd/dist/antd.css';
 import '../css/index.css';
 import { Calendar, Badge } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
-import { Container, Button, Table } from 'react-bootstrap'
+import { Container, Button, Table } from 'react-bootstrap';
 import { Trash } from "react-bootstrap-icons";
+import Global from '../utils/global';
+import Axios from 'axios';
 
 export default function Calendario() {
-
-    const datosTruchos = [
-        {
-            horario: "9 a 12hs", barrio: "Santos Lugares", dirección: "Av La Plata 190", recibe: "Juana", envia: "Luis", telefono: 1130647755, estado: "Entregado"
-        },
-        {
-            horario: "12 a 15hs", barrio: "Devoto", dirección: "Carbone 1676", recibe: "Pedro", envia: "Marta", telefono: 1130647755, estado: "Entregado"
-        }
-    ];
 
     const [isVisibleCalendario, setIsVisibleCalendario] = useState(true)
 
@@ -23,28 +16,43 @@ export default function Calendario() {
 
     const [isVisibleBotonAtras, setIsVisibleBotonAtras] = useState(false)
 
+    const [diaCalendario, setDiaCalendario] = useState({
+        datos: []
+    })
+
+    useEffect(async ()  => {
+        await actualizarViajesCalendario()
+    }, [])
+
     const [viajes, setViajes] = useState({
         datos: [],
         horario: '',
         barrio: '',
-        dirección: '',
+        direccion: '',
         recibe: '',
         envia: '',
         telefono: 0,
-        estado: '',
-        visible: false
+        visible: false,
+        completado: '',
+        fechaSeleccionada: new Date()
     })
 
     function ocultarControlCalendario() {
         setIsVisibleCalendario(false)
         setIsVisibleBotonSiguiente(false)
         setIsVisibleBotonAtras(true)
-        setViajes({
-            ...viajes,
-            visible: true,
-            datos: datosTruchos
-        }
-        )
+        traerViajesPorFecha()
+    }
+
+    const traerViajesPorFecha = () => {
+        Axios.get(Global.urlViajesPorFecha, { params: { fecha: viajes.fechaSeleccionada } })
+            .then(res => {
+                setViajes({
+                    ...viajes,
+                    datos: res.data,
+                    visible: true
+                })
+            })
     }
 
     function mostrarControlCalendario() {
@@ -53,70 +61,69 @@ export default function Calendario() {
         setIsVisibleBotonAtras(false)
         setViajes({
             ...viajes,
-            visible: false
+            visible: false,
+            fechaSeleccionada: new Date()
         }
         )
-    }
-
-    function getListData(value) {
-        let listData;
-        switch (value.date()) {
-            case 7:
-                listData = [
-                    { type: 'success', content: '4 viajes completados' }
-                ];
-                break;
-            case 8:
-                listData = [
-                    { type: 'success', content: '2 viajes completados' },
-                ];
-                break;
-            case 10:
-                listData = [
-                    { type: 'success', content: '8 viajes completados' }
-                ];
-                break;
-            case 15:
-                listData = [
-                    { type: 'warning', content: '4 viajes pendientes' }
-                ];
-                break;
-
-            default:
-        }
-        return listData || [];
     }
 
     function onPanelChange(value, mode) {
         console.log(value.format('YYYY-MM-DD'), mode);
     }
 
-    function dateCellRender(value) {
-        const listData = getListData(value);
-        return (
-            <ul className="events">
-                {listData.map(item => (
-                    <li key={item.content}>
-                        <Badge status={item.type} text={item.content} />
-                    </li>
-                ))}
-            </ul>
-        );
-    }
-
     function onSelect(date) {
-        console.log(date.format('YYYY-MM-DD'));
-    }
-
-    function EliminarViaje(index) {
-        var listaViajes = viajes.datos
-        listaViajes.splice(index, 1)
-
         setViajes({
             ...viajes,
-            datos: listaViajes
+            fechaSeleccionada: date.format('YYYY-MM-DD')
         })
     }
+
+    async function EliminarViaje(index) {
+        await Axios.delete(`${Global.urlViajes}/${viajes.datos[index].id}`)
+        traerViajesPorFecha()
+    }
+
+    async function actualizarViajesCalendario() {
+        await Axios.get(Global.urlViajeCalendario, { params: { fecha: new Date() } })
+            .then(res => {
+                setDiaCalendario({
+                    ...diaCalendario,
+                    datos: res.data
+                })
+            });
+    }
+
+    function obtenerDiaCalendario(dia, mes){
+        var diaCalendarioEncontrado = []
+
+        debugger
+        diaCalendario.datos.forEach(element => {
+            if(element.NumeroDia == dia && element.NumeroMes == mes + 1){
+                diaCalendarioEncontrado = element
+            }
+        }); 
+
+        return diaCalendarioEncontrado
+    }
+
+    function dateCellRender(value) {
+
+
+        debugger
+
+        var diaCalendarioEncontrado = obtenerDiaCalendario(value.date(), value.month())
+
+        return (
+          <ul className="events">
+            { diaCalendarioEncontrado.Status 
+            && diaCalendarioEncontrado.Items.map(item => (
+              <li key={item.content}>
+                <Badge status={item.type} text={item.content} />
+              </li>
+            ))}
+          </ul>
+        );
+      }
 
     return (
         <Container>
@@ -139,15 +146,15 @@ export default function Calendario() {
                         {
                             viajes.datos.map((viaje, index) => (
                                 <tr >
-                                    <td>{viaje.horario}</td>
+                                    <td>{`${viaje.horarioDesde} a ${viaje.horarioHasta}hs`}</td>
                                     <td>{viaje.barrio}</td>
-                                    <td>{viaje.dirección}</td>
+                                    <td>{viaje.direccion}</td>
                                     <td>{viaje.recibe}</td>
                                     <td>{viaje.envia}</td>
                                     <td>{viaje.telefono}</td>
-                                    <td>{viaje.estado}</td>
+                                    <td>{viaje.completado === null ? "Pendiente" : "Entregado"}</td>
                                     <td>
-                                        <Button size="md" onClick={ () => EliminarViaje(index)} >
+                                        <Button size="md" onClick={() => EliminarViaje(index)} >
                                             <Trash />
                                         </Button>
                                     </td>
