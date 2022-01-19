@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Button, Form, Container, Col } from 'react-bootstrap'
 import { DatePicker } from "antd";
 import "antd/dist/antd.css";
@@ -6,7 +6,7 @@ import 'moment/locale/es-mx';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { useForm, Controller } from "react-hook-form";
 import Axios from 'axios';
-import Global from '../utils/global';
+import { ApiViajes, ApiLocalidades } from '../utils/global';
 
 export default function Agendar() {
 
@@ -16,6 +16,15 @@ export default function Agendar() {
         dia: null,
         status: false
     });
+
+    useEffect(async () => {
+        await buscarBarrios()
+    }, [])
+
+    const [localidades, setLocalidades] = useState({
+        datos: [],
+        visible: false
+    })
 
     const [rangoHorario, setRangoHorario] = useState("7 a 10hs");
 
@@ -39,7 +48,7 @@ export default function Agendar() {
         setIsVisibleControlHorarioEspecial(!isVisiblecontrolHorarioEspecial)
     }
 
-    function validarDatePicker(){
+    function validarDatePicker() {
         if (!date.status) {
             setDate({
                 dia: null,
@@ -49,9 +58,9 @@ export default function Agendar() {
         }
     }
 
-    function validarRangoHorario(datos){
+    function validarRangoHorario(datos) {
 
-        if(isVisibleControlHorario) return rangoHorario
+        if (isVisibleControlHorario) return rangoHorario
 
         return datos.RangoHorarioEspecial
     }
@@ -60,9 +69,9 @@ export default function Agendar() {
 
         var horario = validarRangoHorario(datos).split(" ")
 
-        if(validarDatePicker()) return
+        if (validarDatePicker()) return
 
-        Axios.post(Global.urlViajes, {
+        Axios.post(ApiViajes.urlViajes, {
             horarioDesde: parseInt(horario[0]),
             horarioHasta: parseInt(horario[horario.length - 1].replace("hs", "")),
             barrio: datos.Barrio,
@@ -78,8 +87,21 @@ export default function Agendar() {
             });
     }
 
+    const buscarBarrios = async () => {
+        await Axios.get(ApiLocalidades.urlLocalidadesGBA)
+            .then(res => {
+                setLocalidades({
+                    ...localidades,
+                    datos: res.data,
+                    visible: true
+                })
+            })
+    }
+
+    console.log(localidades)
+
     return (
-        <Container>
+        <Container>{localidades.visible &&
             <Form onSubmit={handleSubmit(data => {
                 GuardarViaje(data)
             })}>
@@ -110,10 +132,11 @@ export default function Agendar() {
                                 render={({ field }) => <Form.Select
                                     {...field}>
                                     <option>Elegir barrio...</option>
-                                    <option>Devoto</option>
-                                    <option>Santos Lugares</option>
-                                    <option>Barracas</option>
-                                    <option>Chacarita</option>
+                                    {
+                                        localidades.datos.map(localidad => (
+                                            <option key={localidad.id}>{localidad.nombre}</option>
+                                        ))
+                                    }
                                 </Form.Select>
                                 }
                             />
@@ -170,6 +193,8 @@ export default function Agendar() {
                 <br></br>
                 <Button variant="primary" type="submit">Guardar</Button>
             </Form>
+        }
+
         </Container>
     )
 }

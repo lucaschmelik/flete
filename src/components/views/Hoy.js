@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Table, Button, Accordion } from 'react-bootstrap'
 import { ArrowDown, ArrowReturnLeft, ArrowUp, Check } from "react-bootstrap-icons";
 import moment from 'moment'
-import Global from '../utils/global';
+import { ApiViajes } from '../utils/global';
 import Axios from 'axios';
 
 export default function Hoy() {
@@ -47,12 +47,12 @@ export default function Hoy() {
         var contador = 0
         for (const viaje of listaViajes) {
             if (viaje.orden === ordenViaje + 1) {
-                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje}`)
+                await Axios.put(ApiViajes.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje}`)
                     .catch(error => {
                         alert(error.response.data);
                     });
 
-                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje + 1}`)
+                await Axios.put(ApiViajes.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje + 1}`)
                     .catch(error => {
                         alert(error.response.data);
                     })
@@ -68,12 +68,12 @@ export default function Hoy() {
         var contador = 0
         for (const viaje of listaViajes) {
             if (viaje.orden === ordenViaje) {
-                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje - 1}`)
+                await Axios.put(ApiViajes.urlViajeOrden, `id=${listaViajes[contador].id}&ordenNuevo=${ordenViaje - 1}`)
                     .catch(error => {
                         alert(error.response.data);
                     });
 
-                await Axios.put(Global.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje}`)
+                await Axios.put(ApiViajes.urlViajeOrden, `id=${listaViajes[contador - 1].id}&ordenNuevo=${ordenViaje}`)
                     .catch(error => {
                         alert(error.response.data);
                     })
@@ -87,7 +87,7 @@ export default function Hoy() {
         var viaje = viajes.datos[index]
         viaje.completado = new Date()
 
-        await Axios.put(Global.urlViajeCompletado, `id=${viaje.id}&completado=${viaje.completado.toJSON()}`)
+        await Axios.put(ApiViajes.urlViajeCompletado, `id=${viaje.id}&completado=${viaje.completado.toJSON()}`)
             .catch(error => {
                 alert(error.response.data)
             })
@@ -99,7 +99,7 @@ export default function Hoy() {
     const deshacerViaje = async (index) => {
         var viaje = viajesCompletados.datos[index]
 
-        await Axios.put(Global.urlViajeDeshacer, `id=${viaje.id}`)
+        await Axios.put(ApiViajes.urlViajeDeshacer, `id=${viaje.id}`)
             .catch(error => {
                 alert(error.response.data)
             })
@@ -116,7 +116,7 @@ export default function Hoy() {
     }
 
     const actualizarViajesPendientes = () => {
-        Axios.get(Global.urlViajesPendientesPorFecha, { params: { fecha: new Date() } })
+        Axios.get(ApiViajes.urlViajesPendientesPorFecha, { params: { fecha: new Date() } })
             .then(res => {
                 listarOrden(res.data)
                 setViajes({
@@ -126,7 +126,7 @@ export default function Hoy() {
     }
 
     const actualizarViajesCompletados = () => {
-        Axios.get(Global.urlViajesCompletadosPorFecha, { params: { fecha: new Date() } })
+        Axios.get(ApiViajes.urlViajesCompletadosPorFecha, { params: { fecha: new Date() } })
             .then(res => {
                 setViajesCompletados({
                     datos: res.data

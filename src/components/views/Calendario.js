@@ -5,7 +5,7 @@ import { Calendar, Badge } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Container, Button, Table } from 'react-bootstrap';
 import { Trash } from "react-bootstrap-icons";
-import Global from '../utils/global';
+import { ApiViajes } from '../utils/global';
 import Axios from 'axios';
 
 export default function Calendario() {
@@ -46,7 +46,7 @@ export default function Calendario() {
     }
 
     const traerViajesPorFecha = () => {
-        Axios.get(Global.urlViajesPorFecha, { params: { fecha: viajes.fechaSeleccionada } })
+        Axios.get(ApiViajes.urlViajesPorFecha, { params: { fecha: viajes.fechaSeleccionada } })
             .then(res => {
                 setViajes({
                     ...viajes,
@@ -81,12 +81,12 @@ export default function Calendario() {
     }
 
     async function EliminarViaje(index) {
-        await Axios.delete(`${Global.urlViajes}/${viajes.datos[index].id}`)
+        await Axios.delete(`${ApiViajes.urlViajes}/${viajes.datos[index].id}`)
         traerViajesPorFecha()
     }
 
     async function actualizarViajesCalendario() {
-        await Axios.get(Global.urlViajeCalendario, { params: { fecha: new Date() } })
+        await Axios.get(ApiViajes.urlViajeCalendario, { params: { fecha: new Date() } })
             .then(res => {
                 setDiaCalendario({
                     ...diaCalendario,

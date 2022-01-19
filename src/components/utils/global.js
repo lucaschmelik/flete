@@ -1,4 +1,4 @@
-const ApiViajes = {
+export const ApiViajes = {
     urlViajes: "https://fleteapi.azurewebsites.net/api/viajes",
     urlViajesPorFecha: "https://fleteapi.azurewebsites.net/api/viajes/fecha",
     urlViajesPendientesPorFecha: "https://fleteapi.azurewebsites.net/api/viajes/pendientes",
@@ -9,4 +9,6 @@ const ApiViajes = {
     urlViajeCalendario: "https://fleteapi.azurewebsites.net/api/viajes/Calendario"
 }
 
-export default ApiViajes
+export const ApiLocalidades = {
+    urlLocalidadesGBA: "https://fleteapi.azurewebsites.net/api/localidades"
+}
