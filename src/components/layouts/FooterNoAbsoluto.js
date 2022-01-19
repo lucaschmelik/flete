@@ -2,8 +2,8 @@ import "./Footer.css";
 import { useMediaQuery } from 'react-responsive'
 
 export default function FooterNoAbsoluto() {
-    
-    var classNameResponsive = useMediaQuery({ query: '(min-width: 785px)' })? "footer" : "footer"
+
+    var classNameResponsive = useMediaQuery({ query: '(min-width: 785px)' })? "footer" : "main-footer"
 
     return (        
         <footer className={classNameResponsive}>
