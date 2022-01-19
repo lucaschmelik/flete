@@ -7,7 +7,6 @@ import locale from 'antd/es/date-picker/locale/es_ES';
 import { useForm, Controller } from "react-hook-form";
 import Axios from 'axios';
 import Global from '../utils/global';
-import { Alert } from 'bootstrap';
 
 export default function Agendar() {
 

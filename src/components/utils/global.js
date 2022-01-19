@@ -1,13 +1,13 @@
 const ApiViajes = {
-    urlViajes: "https://localhost:44385/api/viajes",
-    urlViajesPorFecha: "https://localhost:44385/api/viajes/fecha",
-    urlViajesPendientesPorFecha: "https://localhost:44385/api/viajes/pendientes",
-    urlViajesCompletadosPorFecha: "https://localhost:44385/api/viajes/completados",
-    urlViajeCompletado: "https://localhost:44385/api/viajes/entregado",
-    urlViajeDeshacer: "https://localhost:44385/api/viajes/deshacer",
-    urlViajeOrden: "https://localhost:44385/api/viajes/orden",
-    urlViajeEliminar: "https://localhost:44385/api/viajes/",
-    urlViajeCalendario: "https://localhost:44385/api/viajes/Calendario"
+    urlViajes: "https://fleteapi.azurewebsites.net/api/viajes",
+    urlViajesPorFecha: "https://fleteapi.azurewebsites.net/api/fecha",
+    urlViajesPendientesPorFecha: "https://fleteapi.azurewebsites.net/api/pendientes",
+    urlViajesCompletadosPorFecha: "https://fleteapi.azurewebsites.net/api/completados",
+    urlViajeCompletado: "https://fleteapi.azurewebsites.net/api/entregado",
+    urlViajeDeshacer: "https://fleteapi.azurewebsites.net/api/deshacer",
+    urlViajeOrden: "https://fleteapi.azurewebsites.net/api/orden",
+    urlViajeEliminar: "https://fleteapi.azurewebsites.net/api/viajes/",
+    urlViajeCalendario: "https://fleteapi.azurewebsites.net/api/Calendario"
 }
 
 export default ApiViajes

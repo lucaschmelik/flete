@@ -98,7 +98,7 @@ export default function Calendario() {
     function obtenerDiaCalendario(dia, mes){
         var diaCalendarioEncontrado = []
         diaCalendario.datos.forEach(element => {
-            if(element.NumeroDia == dia && element.NumeroMes == mes + 1){
+            if(element.NumeroDia === dia && element.NumeroMes === mes + 1){
                 diaCalendarioEncontrado = element
             }
         }); 
