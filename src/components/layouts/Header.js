@@ -4,7 +4,6 @@ import Hoy from '../views/Hoy';
 import Calendario from '../views/Calendario';
 import Agendar from '../views/Agendar';
 import Footer from './Footer';
-import FooterNoAbsoluto from './FooterNoAbsoluto';
 
 export default function Header() {
     return (
@@ -31,15 +30,15 @@ export default function Header() {
             <Switch>
                 <Route path="/calendario">
                     <Calendario />
-                    <FooterNoAbsoluto />
+                    <Footer />
                 </Route>
                 <Route path="/agendar">
                     <Agendar />
-                    <Footer />
+                    <Footer clase="true"/>
                 </Route>
                 <Route path="/">
                     <Hoy />
-                    <Footer />
+                    <Footer clase="true"/>
                 </Route>
             </Switch>
         </Router>
