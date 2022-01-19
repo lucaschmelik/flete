@@ -23,7 +23,8 @@ export default function Hoy() {
         recibe: '',
         envia: '',
         telefono: 0,
-        completado: ''
+        completado: '',
+        observaciones: ''
     })
 
     const [viajesCompletados, setViajesCompletados] = useState({
@@ -37,7 +38,8 @@ export default function Hoy() {
         recibe: '',
         envia: '',
         telefono: 0,
-        completado: ''
+        completado: '',
+        observaciones: ''
     })
 
     const bajarViaje = async (ordenViaje) => {
@@ -150,7 +152,8 @@ export default function Hoy() {
                                     <th>Envía</th>
                                     <th>Teléfono</th>
                                     <th>Entregado</th>
-                                    <th>Acción</th>
+                                    <th>Observaciones</th>
+                                    <th>Ordenar</th>                                                     
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,10 +165,11 @@ export default function Hoy() {
                                         <td>{viaje.direccion}</td>
                                         <td>{viaje.recibe}</td>
                                         <td>{viaje.envia}</td>
-                                        <td>{viaje.telefono}</td>
+                                        <td>{viaje.telefono}</td>                                        
                                         <td><Button>
                                             <Check variant="flat" onClick={() => completarViaje(index)} />
                                         </Button></td>
+                                        <td>{viaje.observaciones}</td>
                                         <td>
                                             <Button size="lg" variant="flat" onClick={() => bajarViaje(viaje.orden)}>
                                                 <ArrowDown />
@@ -173,7 +177,7 @@ export default function Hoy() {
                                             <Button size="lg" variant="flat" onClick={() => subirViaje(viaje.orden)}>
                                                 <ArrowUp />
                                             </Button>
-                                        </td>
+                                        </td>                                        
                                     </tr>
                                 ))
                                 }
@@ -194,7 +198,8 @@ export default function Hoy() {
                                     <th>Recibe</th>
                                     <th>Envía</th>
                                     <th>Teléfono</th>
-                                    <th>Rehacer</th>
+                                    <th>Observaciones</th>
+                                    <th>Rehacer</th>                                      
                                 </tr>
                             </thead>
                             <tbody>
@@ -207,9 +212,10 @@ export default function Hoy() {
                                         <td>{viaje.recibe}</td>
                                         <td>{viaje.envia}</td>
                                         <td>{viaje.telefono}</td>
+                                        <td>{viaje.observaciones}</td>                                      
                                         <td><Button>
                                             <ArrowReturnLeft variant="flat" onClick={() => deshacerViaje(index)} />
-                                        </Button></td>
+                                        </Button></td>                                        
                                     </tr>
                                 ))
                                 }

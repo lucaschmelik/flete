@@ -20,7 +20,7 @@ export default function Calendario() {
         datos: []
     })
 
-    useEffect(async ()  => {
+    useEffect(async () => {
         await actualizarViajesCalendario()
     }, [])
 
@@ -34,7 +34,8 @@ export default function Calendario() {
         telefono: 0,
         visible: false,
         completado: '',
-        fechaSeleccionada: new Date()
+        fechaSeleccionada: new Date(),
+        observaciones: ''
     })
 
     function ocultarControlCalendario() {
@@ -55,7 +56,7 @@ export default function Calendario() {
             })
     }
 
-    function mostrarControlCalendario() {
+    async function mostrarControlCalendario() {
         setIsVisibleCalendario(true)
         setIsVisibleBotonSiguiente(true)
         setIsVisibleBotonAtras(false)
@@ -65,6 +66,7 @@ export default function Calendario() {
             fechaSeleccionada: new Date()
         }
         )
+        await actualizarViajesCalendario()
     }
 
     function onPanelChange(value, mode) {
@@ -95,8 +97,6 @@ export default function Calendario() {
 
     function obtenerDiaCalendario(dia, mes){
         var diaCalendarioEncontrado = []
-
-        debugger
         diaCalendario.datos.forEach(element => {
             if(element.NumeroDia == dia && element.NumeroMes == mes + 1){
                 diaCalendarioEncontrado = element
@@ -107,9 +107,6 @@ export default function Calendario() {
     }
 
     function dateCellRender(value) {
-
-
-        debugger
 
         var diaCalendarioEncontrado = obtenerDiaCalendario(value.date(), value.month())
 
@@ -139,6 +136,7 @@ export default function Calendario() {
                             <th>Envía</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
+                            <th>Observaciones</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -152,6 +150,7 @@ export default function Calendario() {
                                     <td>{viaje.recibe}</td>
                                     <td>{viaje.envia}</td>
                                     <td>{viaje.telefono}</td>
+                                    <td>{viaje.observaciones}</td>
                                     <td>{viaje.completado === null ? "Pendiente" : "Entregado"}</td>
                                     <td>
                                         <Button size="md" onClick={() => EliminarViaje(index)} >
