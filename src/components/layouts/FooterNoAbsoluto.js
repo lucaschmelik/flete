@@ -3,7 +3,9 @@ import { useMediaQuery } from 'react-responsive'
 
 export default function FooterNoAbsoluto() {
 
-    var classNameResponsive = useMediaQuery({ query: '(min-width: 785px)' })? "footer" : "main-footer"
+    const EsCelular = useMediaQuery({ query: '(min-device-width: 785px)' })
+
+    var classNameResponsive = EsCelular? "footer" : "main-footer"
 
     return (        
         <footer className={classNameResponsive}>
