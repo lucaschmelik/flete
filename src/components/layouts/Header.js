@@ -30,15 +30,12 @@ export default function Header() {
             <Switch>
                 <Route path="/calendario">
                     <Calendario />
-                    <Footer />
                 </Route>
                 <Route path="/agendar">
                     <Agendar />
-                    <Footer clase="true"/>
                 </Route>
                 <Route path="/">
                     <Hoy />
-                    <Footer clase="true"/>
                 </Route>
             </Switch>
         </Router>
