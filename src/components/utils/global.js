@@ -1,14 +1,16 @@
+const HOST = `https://localhost:7036/api`;
+
 export const ApiViajes = {
-    urlViajes: "https://fleteapi.azurewebsites.net/api/viajes",
-    urlViajesPorFecha: "https://fleteapi.azurewebsites.net/api/viajes/fecha",
-    urlViajesPendientesPorFecha: "https://fleteapi.azurewebsites.net/api/viajes/pendientes",
-    urlViajesCompletadosPorFecha: "https://fleteapi.azurewebsites.net/api/viajes/completados",
-    urlViajeCompletado: "https://fleteapi.azurewebsites.net/api/viajes/entregado",
-    urlViajeDeshacer: "https://fleteapi.azurewebsites.net/api/viajes/deshacer",
-    urlViajeOrden: "https://fleteapi.azurewebsites.net/api/viajes/orden",
-    urlViajeCalendario: "https://fleteapi.azurewebsites.net/api/viajes/Calendario"
+    urlViajes: `${HOST}/viajes`,
+    urlViajesPorFecha: `${HOST}/viajes/fecha`,
+    urlViajesPendientesPorFecha: `${HOST}/viajes/pendientes`,
+    urlViajesCompletadosPorFecha: `${HOST}/viajes/completados`,
+    urlViajeCompletado: `${HOST}/viajes/entregado`,
+    urlViajeDeshacer: `${HOST}/viajes/deshacer`,
+    urlViajeOrden: `${HOST}/viajes/orden`,
+    urlViajeCalendario: `${HOST}/viajes/Calendario`
 }
 
 export const ApiLocalidades = {
-    urlLocalidadesGBA: "https://fleteapi.azurewebsites.net/api/localidades"
+    urlLocalidadesGBA: `${HOST}/localidades`
 }
